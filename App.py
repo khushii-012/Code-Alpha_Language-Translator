@@ -26,8 +26,12 @@ st.markdown("""
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
 
+    html, body, .stApp, [class^="st-"] {
+        color: #1E5A54;
+    }
+
     .stApp {
-        background: linear-gradient(180deg, #E8F6F3 0%, #DCF0EB 100%);
+        background: linear-gradient(180deg, #E8F6F3 0%, #DCF0EB 100%) !important;
         font-family: 'DM Sans', sans-serif;
     }
 
@@ -41,7 +45,7 @@ st.markdown("""
         font-size: 2.3rem;
         font-weight: 800;
         text-align: center;
-        color: #1E5A54;
+        color: #1E5A54 !important;
         margin-bottom: 0.6rem;
     }
 
@@ -50,7 +54,7 @@ st.markdown("""
         width: fit-content;
         margin: 0 auto 1.6rem auto;
         background: #1E5A54;
-        color: #FFFFFF;
+        color: #FFFFFF !important;
         font-family: 'DM Sans', sans-serif;
         font-weight: 700;
         font-size: 0.9rem;
@@ -60,8 +64,8 @@ st.markdown("""
         box-shadow: 0 6px 16px rgba(30, 90, 84, 0.25);
     }
 
-    /* ---------- BUBBLE CARDS ---------- */
-    .bubble-card {
+    /* ---------- SOURCE CARD (real container, properly scoped) ---------- */
+    div[class*="st-key-source_card"] {
         background: #FFFFFF;
         border-radius: 22px;
         border-bottom-left-radius: 6px;
@@ -69,41 +73,51 @@ st.markdown("""
         box-shadow: 0 8px 24px rgba(30, 90, 84, 0.10);
         margin-bottom: 1.1rem;
     }
+    div[class*="st-key-source_card"] * {
+        color: #1E5A54 !important;
+    }
 
-    .bubble-card-target {
+    /* ---------- TARGET CARD (real container, properly scoped) ---------- */
+    div[class*="st-key-target_card"] {
         background: #2BAFA0;
         border-radius: 22px;
         border-bottom-right-radius: 6px;
         padding: 1.3rem 1.6rem;
         box-shadow: 0 8px 24px rgba(30, 90, 84, 0.18);
         margin-bottom: 1.1rem;
-        color: white;
+    }
+    div[class*="st-key-target_card"] p,
+    div[class*="st-key-target_card"] div,
+    div[class*="st-key-target_card"] span,
+    div[class*="st-key-target_card"] label {
+        color: #FFFFFF !important;
     }
 
     .bubble-label {
         font-family: 'DM Sans', sans-serif;
-        font-weight: 700;
-        font-size: 0.72rem;
+        font-weight: 700 !important;
+        font-size: 0.72rem !important;
         text-transform: uppercase;
         letter-spacing: 1.2px;
-        color: #2BAFA0;
         margin-bottom: 0.5rem;
+        color: #2BAFA0 !important;
     }
 
     .bubble-label-target {
         font-family: 'DM Sans', sans-serif;
-        font-weight: 700;
-        font-size: 0.72rem;
+        font-weight: 700 !important;
+        font-size: 0.72rem !important;
         text-transform: uppercase;
         letter-spacing: 1.2px;
-        color: #EAFBF8;
         margin-bottom: 0.5rem;
+        color: #EAFBF8 !important;
     }
 
     .translated-text {
-        font-size: 1.15rem;
+        font-size: 1.15rem !important;
         line-height: 1.6;
         font-weight: 500;
+        color: #FFFFFF !important;
     }
 
     label, .stSelectbox label, .stTextArea label {
@@ -116,23 +130,26 @@ st.markdown("""
     }
 
     .stSelectbox > div > div {
-        background-color: #F2FAF9;
+        background-color: #F2FAF9 !important;
         border-radius: 14px !important;
         border: 1.5px solid #CFEEE8 !important;
     }
+    .stSelectbox [data-baseweb="select"] * {
+        color: #1E5A54 !important;
+    }
 
     .stTextArea textarea {
-        background-color: #F2FAF9;
+        background-color: #F2FAF9 !important;
         border-radius: 14px !important;
         border: 1.5px solid #CFEEE8 !important;
         font-family: 'DM Sans', sans-serif;
-        color: #1E5A54;
+        color: #1E5A54 !important;
     }
 
     /* Translate button */
     div.stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #2BAFA0 0%, #1E5A54 100%);
-        color: white;
+        background: linear-gradient(135deg, #2BAFA0 0%, #1E5A54 100%) !important;
+        color: white !important;
         border: none;
         border-radius: 30px;
         padding: 0.65rem 2rem;
@@ -150,8 +167,8 @@ st.markdown("""
 
     /* Swap icon button - scoped only to its own container */
     div[class*="st-key-swap_container"] div.stButton > button {
-        background: #FFFFFF;
-        color: #2BAFA0;
+        background: #FFFFFF !important;
+        color: #2BAFA0 !important;
         border: 2px solid #2BAFA0;
         border-radius: 50%;
         width: 44px;
@@ -162,8 +179,8 @@ st.markdown("""
         box-shadow: 0 4px 10px rgba(43, 175, 160, 0.2);
     }
     div[class*="st-key-swap_container"] div.stButton > button:hover {
-        background: #2BAFA0;
-        color: white;
+        background: #2BAFA0 !important;
+        color: white !important;
     }
     div[class*="st-key-swap_container"] {
         display: flex;
@@ -175,8 +192,8 @@ st.markdown("""
 
     /* Speaker icon button - small round icon, scoped only to its own container */
     div[class*="st-key-listen_container"] div.stButton > button {
-        background: rgba(255, 255, 255, 0.25);
-        color: white;
+        background: rgba(255, 255, 255, 0.25) !important;
+        color: white !important;
         border: 1.5px solid rgba(255, 255, 255, 0.6);
         border-radius: 50%;
         width: 40px;
@@ -185,32 +202,34 @@ st.markdown("""
         font-size: 1.05rem;
     }
     div[class*="st-key-listen_container"] div.stButton > button:hover {
-        background: rgba(255, 255, 255, 0.4);
+        background: rgba(255, 255, 255, 0.4) !important;
     }
 
     .reading-aid {
-        background: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.9);
         border-radius: 12px;
         padding: 0.8rem 1.2rem;
         margin-top: 0.8rem;
         font-family: 'DM Sans', sans-serif;
-        color: #1E5A54;
         font-size: 0.92rem;
         line-height: 1.5;
     }
+    .reading-aid, .reading-aid * {
+        color: #1E5A54 !important;
+    }
 
     .reading-aid-label {
-        font-weight: 700;
-        font-size: 0.68rem;
+        font-weight: 700 !important;
+        font-size: 0.68rem !important;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #2BAFA0;
         margin-bottom: 0.25rem;
+        color: #2BAFA0 !important;
     }
 
     .footer-note {
         text-align: center;
-        color: #7CADA5;
+        color: #4C8A82 !important;
         font-size: 0.78rem;
         margin-top: 1.6rem;
         letter-spacing: 0.3px;
@@ -276,33 +295,30 @@ st.markdown('<div class="hero-title">🌐 Language Translator</div>', unsafe_all
 pair_label = f"{clean_name(st.session_state.source_choice)}  ⇄  {clean_name(st.session_state.target_choice)}"
 st.markdown(f'<div class="lang-pair-pill">{pair_label}</div>', unsafe_allow_html=True)
 
-# ---------- SOURCE BUBBLE ----------
-st.markdown('<div class="bubble-card">', unsafe_allow_html=True)
+# ---------- SOURCE CARD ----------
+with st.container(key="source_card"):
+    col1, col_swap, col2 = st.columns([5, 1, 5])
 
-col1, col_swap, col2 = st.columns([5, 1, 5])
+    with col1:
+        source_lang = st.selectbox(
+            "From",
+            options=["Auto Detect"] + ordered_languages,
+            key="source_choice"
+        )
 
-with col1:
-    source_lang = st.selectbox(
-        "From",
-        options=["Auto Detect"] + ordered_languages,
-        key="source_choice"
-    )
+    with col_swap:
+        with st.container(key="swap_container"):
+            st.button("⇄", key="swap_btn", on_click=swap_languages)
 
-with col_swap:
-    with st.container(key="swap_container"):
-        st.button("⇄", key="swap_btn", on_click=swap_languages)
+    with col2:
+        target_lang = st.selectbox(
+            "To",
+            options=ordered_languages,
+            key="target_choice"
+        )
 
-with col2:
-    target_lang = st.selectbox(
-        "To",
-        options=ordered_languages,
-        key="target_choice"
-    )
-
-input_text = st.text_area("Enter text to translate", height=130, placeholder="Type something...", label_visibility="collapsed")
-translate_clicked = st.button("Translate ✨", type="primary")
-
-st.markdown('</div>', unsafe_allow_html=True)
+    input_text = st.text_area("Enter text to translate", height=130, placeholder="Type something...", label_visibility="collapsed")
+    translate_clicked = st.button("Translate ✨", type="primary")
 
 # ---------- TRANSLATION LOGIC ----------
 if translate_clicked:
@@ -321,27 +337,24 @@ if translate_clicked:
         except Exception as e:
             st.error(f"Translation failed: {e}")
 
-# ---------- TARGET BUBBLE (result) ----------
+# ---------- TARGET CARD (result) ----------
 if "translated_text" in st.session_state:
-    st.markdown('<div class="bubble-card-target">', unsafe_allow_html=True)
+    with st.container(key="target_card"):
+        col_t1, col_t2 = st.columns([6, 1])
+        with col_t1:
+            st.markdown(f'<div class="bubble-label-target">{clean_name(st.session_state.target_choice)}</div>', unsafe_allow_html=True)
+        with col_t2:
+            with st.container(key="listen_container"):
+                listen_clicked = st.button("🔊", key="listen_btn")
 
-    col_t1, col_t2 = st.columns([6, 1])
-    with col_t1:
-        st.markdown(f'<div class="bubble-label-target">{clean_name(st.session_state.target_choice)}</div>', unsafe_allow_html=True)
-    with col_t2:
-        with st.container(key="listen_container"):
-            listen_clicked = st.button("🔊", key="listen_btn")
+        st.markdown(f'<div class="translated-text">{st.session_state["translated_text"]}</div>', unsafe_allow_html=True)
 
-    st.markdown(f'<div class="translated-text">{st.session_state["translated_text"]}</div>', unsafe_allow_html=True)
-
-    reading_aid = get_reading_aid(st.session_state["translated_text"], st.session_state["target_code"])
-    if reading_aid:
-        st.markdown(
-            f'<div class="reading-aid"><div class="reading-aid-label">📖 Read as (Hindi script)</div>{reading_aid}</div>',
-            unsafe_allow_html=True
-        )
-
-    st.markdown('</div>', unsafe_allow_html=True)
+        reading_aid = get_reading_aid(st.session_state["translated_text"], st.session_state["target_code"])
+        if reading_aid:
+            st.markdown(
+                f'<div class="reading-aid"><div class="reading-aid-label">📖 Read as (Hindi script)</div>{reading_aid}</div>',
+                unsafe_allow_html=True
+            )
 
     if listen_clicked:
         try:
