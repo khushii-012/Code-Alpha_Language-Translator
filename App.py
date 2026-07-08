@@ -1,6 +1,6 @@
 """
 CodeAlpha_LanguageTranslator
-An aesthetic Language Translation Tool built with Streamlit.
+A vibrant, aesthetic Language Translation Tool built with Streamlit.
 
 Run with:  streamlit run app.py
 """
@@ -8,6 +8,8 @@ Run with:  streamlit run app.py
 import streamlit as st
 from deep_translator import GoogleTranslator
 from deep_translator.constants import GOOGLE_LANGUAGES_TO_CODES as RAW_LANGUAGES
+from indic_transliteration import sanscript
+from indic_transliteration.sanscript import transliterate
 from gtts import gTTS
 import io
 
@@ -24,7 +26,7 @@ st.markdown("""
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
 
     .stApp {
-        background: radial-gradient(ellipse at top, #FDF4EE 0%, #F7E9DE 100%);
+        background: linear-gradient(160deg, #FDEBF3 0%, #F3E8FB 35%, #FFF3E0 70%, #E6F7F1 100%);
         font-family: 'DM Sans', sans-serif;
     }
 
@@ -35,46 +37,48 @@ st.markdown("""
     /* ---------- HEADER ---------- */
     .eyebrow {
         text-align: center;
-        font-family: 'DM Sans', sans-serif;
         font-size: 0.72rem;
         font-weight: 700;
         letter-spacing: 3px;
         text-transform: uppercase;
-        color: #B8785F;
+        color: #C44FA0;
         margin-bottom: 0.3rem;
     }
 
     .hero-title {
         font-family: 'Playfair Display', serif;
-        font-size: 2.7rem;
+        font-size: 2.8rem;
         font-weight: 800;
-        color: #3D2B24;
         text-align: center;
         margin-bottom: 0.3rem;
         letter-spacing: 0.2px;
+        background: linear-gradient(90deg, #D6336C 0%, #F5A623 45%, #2BB6A3 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
     }
 
     .hero-rule {
-        width: 60px;
-        height: 3px;
-        background: linear-gradient(90deg, #C97B63, #8B9A7D);
+        width: 70px;
+        height: 4px;
+        background: linear-gradient(90deg, #D6336C, #F5A623, #2BB6A3);
         margin: 0 auto 1.6rem auto;
-        border-radius: 3px;
+        border-radius: 4px;
     }
 
     /* ---------- TICKET-STYLE CARD ---------- */
     .ticket-card {
-        background: #FFFDFB;
+        background: #FFFFFF;
         border-radius: 22px;
         padding: 1.6rem 1.8rem 1rem 1.8rem;
-        box-shadow: 0 10px 32px rgba(140, 95, 70, 0.14);
-        border: 1px solid #F0DED0;
+        box-shadow: 0 12px 32px rgba(214, 51, 108, 0.16);
+        border: 1px solid #F6D9EA;
         position: relative;
         margin-bottom: 1.4rem;
     }
 
     .ticket-perforation {
-        border-bottom: 2px dashed #E3CBB8;
+        border-bottom: 2px dashed #E8C4DC;
         margin: 1rem 0 1.2rem 0;
         position: relative;
     }
@@ -84,7 +88,7 @@ st.markdown("""
         top: -10px;
         width: 20px;
         height: 20px;
-        background: radial-gradient(circle, #F7E9DE 60%, transparent 60%);
+        background: radial-gradient(circle, #F3E8FB 60%, transparent 60%);
         border-radius: 50%;
     }
     .ticket-perforation::before { left: -1.8rem; }
@@ -93,92 +97,130 @@ st.markdown("""
     label, .stSelectbox label, .stTextArea label {
         font-family: 'DM Sans', sans-serif !important;
         font-weight: 700 !important;
-        color: #A9765F !important;
+        color: #C44FA0 !important;
         font-size: 0.72rem !important;
         text-transform: uppercase;
         letter-spacing: 1.2px;
     }
 
     .stSelectbox > div > div {
-        background-color: #FFFBF8;
+        background-color: #FFF8FC;
         border-radius: 14px !important;
-        border: 1.5px solid #EFDBCB !important;
+        border: 1.5px solid #F3D3E8 !important;
     }
 
     .stTextArea textarea {
-        background-color: #FFFBF8;
+        background-color: #FFF8FC;
         border-radius: 14px !important;
-        border: 1.5px solid #EFDBCB !important;
+        border: 1.5px solid #F3D3E8 !important;
         font-family: 'DM Sans', sans-serif;
-        color: #3D2B24;
+        color: #3D1F33;
     }
 
-    /* Swap button - the signature element */
-    div[data-testid="column"]:has(button[kind="secondary"]) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    div.stButton > button {
-        font-family: 'DM Sans', sans-serif;
-        font-weight: 700;
-        border-radius: 30px;
-        border: none;
-    }
-
+    /* Translate button (primary) */
     div.stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #C97B63 0%, #B8654C 100%);
+        background: linear-gradient(135deg, #D6336C 0%, #F5A623 100%);
         color: white;
+        border: none;
+        border-radius: 30px;
         padding: 0.65rem 2rem;
+        font-weight: 700;
         font-size: 0.95rem;
         letter-spacing: 0.3px;
-        box-shadow: 0 6px 18px rgba(201, 123, 99, 0.4);
+        box-shadow: 0 6px 18px rgba(214, 51, 108, 0.35);
         width: 100%;
         transition: all 0.2s ease;
     }
     div.stButton > button[kind="primary"]:hover {
-        box-shadow: 0 8px 22px rgba(201, 123, 99, 0.5);
+        box-shadow: 0 8px 22px rgba(214, 51, 108, 0.5);
         transform: translateY(-1px);
     }
 
-    div.stButton > button[kind="secondary"] {
+    /* Swap button - scoped ONLY to its container, so it never leaks onto other buttons */
+    div[class*="st-key-swap_container"] div.stButton > button {
         background: #FFFFFF;
-        color: #8B9A7D;
-        border: 1.5px solid #D7E0CC;
-        width: 44px;
-        height: 44px;
+        color: #2BB6A3;
+        border: 2px solid #2BB6A3;
+        border-radius: 50%;
+        width: 46px;
+        height: 46px;
         padding: 0;
-        font-size: 1.1rem;
-        box-shadow: 0 4px 10px rgba(139, 154, 125, 0.2);
+        font-size: 1.2rem;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(43, 182, 163, 0.25);
     }
-    div.stButton > button[kind="secondary"]:hover {
-        background: #F1F5EB;
-        border-color: #8B9A7D;
+    div[class*="st-key-swap_container"] div.stButton > button:hover {
+        background: #2BB6A3;
+        color: white;
+    }
+    div[class*="st-key-swap_container"] {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        height: 100%;
+        padding-bottom: 6px;
+    }
+
+    /* Listen button - scoped ONLY to its container, distinct teal pill */
+    div[class*="st-key-listen_container"] div.stButton > button {
+        background: linear-gradient(135deg, #2BB6A3 0%, #1F9385 100%);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 0.55rem 1.4rem;
+        font-weight: 700;
+        font-size: 0.9rem;
+        width: 100%;
+        box-shadow: 0 6px 16px rgba(43, 182, 163, 0.35);
+    }
+    div[class*="st-key-listen_container"] div.stButton > button:hover {
+        box-shadow: 0 8px 20px rgba(43, 182, 163, 0.45);
+        transform: translateY(-1px);
     }
 
     .result-label {
         font-family: 'Playfair Display', serif;
         font-weight: 700;
         font-size: 1.25rem;
-        color: #3D2B24;
+        color: #3D1F33;
         margin-bottom: 0.7rem;
     }
 
     .result-box {
-        background: linear-gradient(135deg, #F6EFE8 0%, #F1EAE0 100%);
-        border-left: 4px solid #8B9A7D;
+        background: linear-gradient(135deg, #FDEBF3 0%, #FFF3E0 100%);
+        border-left: 4px solid #D6336C;
         border-radius: 12px;
         padding: 1.2rem 1.5rem;
         font-family: 'DM Sans', sans-serif;
-        color: #3D2B24;
+        color: #3D1F33;
         font-size: 1.08rem;
         line-height: 1.65;
+        margin-bottom: 0.8rem;
+    }
+
+    .reading-aid {
+        background: #E6F7F1;
+        border-left: 4px solid #2BB6A3;
+        border-radius: 12px;
+        padding: 0.9rem 1.5rem;
+        font-family: 'DM Sans', sans-serif;
+        color: #1F6B5F;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    .reading-aid-label {
+        font-weight: 700;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #2BB6A3;
+        margin-bottom: 0.3rem;
     }
 
     .footer-note {
         text-align: center;
-        color: #C4A794;
+        color: #C48FB0;
         font-size: 0.78rem;
         margin-top: 1.6rem;
         letter-spacing: 0.3px;
@@ -201,6 +243,31 @@ ordered_languages = [f"🇮🇳 {name}" for name in indian_display_names] + othe
 
 def resolve_lang(display_name):
     return lang_names[display_name.replace("🇮🇳 ", "")]
+
+# Language codes whose native script can be transliterated into Devanagari
+# so Hindi readers can sound out the translation
+SCRIPT_MAP = {
+    'pa': sanscript.GURMUKHI,
+    'bn': sanscript.BENGALI,
+    'as': sanscript.BENGALI,      # Assamese shares the Bengali-Assamese script
+    'gu': sanscript.GUJARATI,
+    'kn': sanscript.KANNADA,
+    'ml': sanscript.MALAYALAM,
+    'or': sanscript.ORIYA,
+    'ta': sanscript.TAMIL,
+    'te': sanscript.TELUGU,
+}
+
+def get_reading_aid(text, target_code):
+    """Return a Devanagari (Hindi-script) reading aid if the target script
+    is a different Indic script we can transliterate. Returns None otherwise."""
+    scheme = SCRIPT_MAP.get(target_code)
+    if not scheme:
+        return None
+    try:
+        return transliterate(text, scheme, sanscript.DEVANAGARI)
+    except Exception:
+        return None
 
 # ---------- SESSION STATE DEFAULTS ----------
 if "source_choice" not in st.session_state:
@@ -232,8 +299,8 @@ with col1:
     )
 
 with col_swap:
-    st.write("")
-    st.button("⇄", key="swap_btn", on_click=swap_languages, type="secondary")
+    with st.container(key="swap_container"):
+        st.button("⇄", key="swap_btn", on_click=swap_languages)
 
 with col2:
     target_lang = st.selectbox(
@@ -272,6 +339,13 @@ if "translated_text" in st.session_state:
     st.markdown('<div class="result-label">Translated Text</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="result-box">{st.session_state["translated_text"]}</div>', unsafe_allow_html=True)
 
+    reading_aid = get_reading_aid(st.session_state["translated_text"], st.session_state["target_code"])
+    if reading_aid:
+        st.markdown(
+            f'<div class="reading-aid"><div class="reading-aid-label">📖 Read as (Hindi script)</div>{reading_aid}</div>',
+            unsafe_allow_html=True
+        )
+
     st.write("")
     col_a, col_b = st.columns(2)
 
@@ -280,7 +354,9 @@ if "translated_text" in st.session_state:
         st.caption("👆 Click the copy icon in the top-right of the box above")
 
     with col_b:
-        if st.button("🔊 Listen to translation"):
+        with st.container(key="listen_container"):
+            listen_clicked = st.button("🔊 Listen to translation")
+        if listen_clicked:
             try:
                 tts = gTTS(text=st.session_state["translated_text"], lang=st.session_state["target_code"])
                 audio_buffer = io.BytesIO()
