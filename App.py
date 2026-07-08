@@ -1,6 +1,7 @@
 """
 CodeAlpha_LanguageTranslator
-A vibrant, aesthetic Language Translation Tool built with Streamlit.
+A chat-bubble style Language Translation Tool built with Streamlit,
+inspired by mobile translation-app UI patterns.
 
 Run with:  streamlit run app.py
 """
@@ -23,10 +24,10 @@ st.set_page_config(
 # ---------- CUSTOM CSS ----------
 st.markdown("""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap');
 
     .stApp {
-        background: linear-gradient(160deg, #FDEBF3 0%, #F3E8FB 35%, #FFF3E0 70%, #E6F7F1 100%);
+        background: linear-gradient(180deg, #E8F6F3 0%, #DCF0EB 100%);
         font-family: 'DM Sans', sans-serif;
     }
 
@@ -35,91 +36,102 @@ st.markdown("""
     header {visibility: hidden;}
 
     /* ---------- HEADER ---------- */
-    .eyebrow {
-        text-align: center;
-        font-size: 0.72rem;
-        font-weight: 700;
-        letter-spacing: 3px;
-        text-transform: uppercase;
-        color: #C44FA0;
-        margin-bottom: 0.3rem;
-    }
-
     .hero-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 2.8rem;
+        font-family: 'Poppins', sans-serif;
+        font-size: 2.3rem;
         font-weight: 800;
         text-align: center;
-        margin-bottom: 0.3rem;
-        letter-spacing: 0.2px;
-        background: linear-gradient(90deg, #D6336C 0%, #F5A623 45%, #2BB6A3 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
+        color: #1E5A54;
+        margin-bottom: 0.6rem;
     }
 
-    .hero-rule {
-        width: 70px;
-        height: 4px;
-        background: linear-gradient(90deg, #D6336C, #F5A623, #2BB6A3);
+    .lang-pair-pill {
+        display: block;
+        width: fit-content;
         margin: 0 auto 1.6rem auto;
-        border-radius: 4px;
+        background: #1E5A54;
+        color: #FFFFFF;
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 0.5rem 1.4rem;
+        border-radius: 30px;
+        letter-spacing: 0.3px;
+        box-shadow: 0 6px 16px rgba(30, 90, 84, 0.25);
     }
 
-    /* ---------- TICKET-STYLE CARD ---------- */
-    .ticket-card {
+    /* ---------- BUBBLE CARDS ---------- */
+    .bubble-card {
         background: #FFFFFF;
         border-radius: 22px;
-        padding: 1.6rem 1.8rem 1rem 1.8rem;
-        box-shadow: 0 12px 32px rgba(214, 51, 108, 0.16);
-        border: 1px solid #F6D9EA;
-        position: relative;
-        margin-bottom: 1.4rem;
+        border-bottom-left-radius: 6px;
+        padding: 1.3rem 1.6rem;
+        box-shadow: 0 8px 24px rgba(30, 90, 84, 0.10);
+        margin-bottom: 1.1rem;
     }
 
-    .ticket-perforation {
-        border-bottom: 2px dashed #E8C4DC;
-        margin: 1rem 0 1.2rem 0;
-        position: relative;
+    .bubble-card-target {
+        background: #2BAFA0;
+        border-radius: 22px;
+        border-bottom-right-radius: 6px;
+        padding: 1.3rem 1.6rem;
+        box-shadow: 0 8px 24px rgba(30, 90, 84, 0.18);
+        margin-bottom: 1.1rem;
+        color: white;
     }
-    .ticket-perforation::before, .ticket-perforation::after {
-        content: '';
-        position: absolute;
-        top: -10px;
-        width: 20px;
-        height: 20px;
-        background: radial-gradient(circle, #F3E8FB 60%, transparent 60%);
-        border-radius: 50%;
+
+    .bubble-label {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: #2BAFA0;
+        margin-bottom: 0.5rem;
     }
-    .ticket-perforation::before { left: -1.8rem; }
-    .ticket-perforation::after { right: -1.8rem; }
+
+    .bubble-label-target {
+        font-family: 'DM Sans', sans-serif;
+        font-weight: 700;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: #EAFBF8;
+        margin-bottom: 0.5rem;
+    }
+
+    .translated-text {
+        font-size: 1.15rem;
+        line-height: 1.6;
+        font-weight: 500;
+    }
 
     label, .stSelectbox label, .stTextArea label {
         font-family: 'DM Sans', sans-serif !important;
         font-weight: 700 !important;
-        color: #C44FA0 !important;
+        color: #2BAFA0 !important;
         font-size: 0.72rem !important;
         text-transform: uppercase;
         letter-spacing: 1.2px;
     }
 
     .stSelectbox > div > div {
-        background-color: #FFF8FC;
+        background-color: #F2FAF9;
         border-radius: 14px !important;
-        border: 1.5px solid #F3D3E8 !important;
+        border: 1.5px solid #CFEEE8 !important;
     }
 
     .stTextArea textarea {
-        background-color: #FFF8FC;
+        background-color: #F2FAF9;
         border-radius: 14px !important;
-        border: 1.5px solid #F3D3E8 !important;
+        border: 1.5px solid #CFEEE8 !important;
         font-family: 'DM Sans', sans-serif;
-        color: #3D1F33;
+        color: #1E5A54;
     }
 
-    /* Translate button (primary) */
+    /* Translate button */
     div.stButton > button[kind="primary"] {
-        background: linear-gradient(135deg, #D6336C 0%, #F5A623 100%);
+        background: linear-gradient(135deg, #2BAFA0 0%, #1E5A54 100%);
         color: white;
         border: none;
         border-radius: 30px;
@@ -127,30 +139,30 @@ st.markdown("""
         font-weight: 700;
         font-size: 0.95rem;
         letter-spacing: 0.3px;
-        box-shadow: 0 6px 18px rgba(214, 51, 108, 0.35);
+        box-shadow: 0 6px 18px rgba(30, 90, 84, 0.3);
         width: 100%;
         transition: all 0.2s ease;
     }
     div.stButton > button[kind="primary"]:hover {
-        box-shadow: 0 8px 22px rgba(214, 51, 108, 0.5);
+        box-shadow: 0 8px 22px rgba(30, 90, 84, 0.4);
         transform: translateY(-1px);
     }
 
-    /* Swap button - scoped ONLY to its container, so it never leaks onto other buttons */
+    /* Swap icon button - scoped only to its own container */
     div[class*="st-key-swap_container"] div.stButton > button {
         background: #FFFFFF;
-        color: #2BB6A3;
-        border: 2px solid #2BB6A3;
+        color: #2BAFA0;
+        border: 2px solid #2BAFA0;
         border-radius: 50%;
-        width: 46px;
-        height: 46px;
+        width: 44px;
+        height: 44px;
         padding: 0;
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         font-weight: 700;
-        box-shadow: 0 4px 12px rgba(43, 182, 163, 0.25);
+        box-shadow: 0 4px 10px rgba(43, 175, 160, 0.2);
     }
     div[class*="st-key-swap_container"] div.stButton > button:hover {
-        background: #2BB6A3;
+        background: #2BAFA0;
         color: white;
     }
     div[class*="st-key-swap_container"] {
@@ -161,66 +173,44 @@ st.markdown("""
         padding-bottom: 6px;
     }
 
-    /* Listen button - scoped ONLY to its container, distinct teal pill */
+    /* Speaker icon button - small round icon, scoped only to its own container */
     div[class*="st-key-listen_container"] div.stButton > button {
-        background: linear-gradient(135deg, #2BB6A3 0%, #1F9385 100%);
+        background: rgba(255, 255, 255, 0.25);
         color: white;
-        border: none;
-        border-radius: 30px;
-        padding: 0.55rem 1.4rem;
-        font-weight: 700;
-        font-size: 0.9rem;
-        width: 100%;
-        box-shadow: 0 6px 16px rgba(43, 182, 163, 0.35);
+        border: 1.5px solid rgba(255, 255, 255, 0.6);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        font-size: 1.05rem;
     }
     div[class*="st-key-listen_container"] div.stButton > button:hover {
-        box-shadow: 0 8px 20px rgba(43, 182, 163, 0.45);
-        transform: translateY(-1px);
-    }
-
-    .result-label {
-        font-family: 'Playfair Display', serif;
-        font-weight: 700;
-        font-size: 1.25rem;
-        color: #3D1F33;
-        margin-bottom: 0.7rem;
-    }
-
-    .result-box {
-        background: linear-gradient(135deg, #FDEBF3 0%, #FFF3E0 100%);
-        border-left: 4px solid #D6336C;
-        border-radius: 12px;
-        padding: 1.2rem 1.5rem;
-        font-family: 'DM Sans', sans-serif;
-        color: #3D1F33;
-        font-size: 1.08rem;
-        line-height: 1.65;
-        margin-bottom: 0.8rem;
+        background: rgba(255, 255, 255, 0.4);
     }
 
     .reading-aid {
-        background: #E6F7F1;
-        border-left: 4px solid #2BB6A3;
+        background: rgba(255, 255, 255, 0.85);
         border-radius: 12px;
-        padding: 0.9rem 1.5rem;
+        padding: 0.8rem 1.2rem;
+        margin-top: 0.8rem;
         font-family: 'DM Sans', sans-serif;
-        color: #1F6B5F;
-        font-size: 0.95rem;
+        color: #1E5A54;
+        font-size: 0.92rem;
         line-height: 1.5;
     }
 
     .reading-aid-label {
         font-weight: 700;
-        font-size: 0.7rem;
+        font-size: 0.68rem;
         text-transform: uppercase;
         letter-spacing: 1px;
-        color: #2BB6A3;
-        margin-bottom: 0.3rem;
+        color: #2BAFA0;
+        margin-bottom: 0.25rem;
     }
 
     .footer-note {
         text-align: center;
-        color: #C48FB0;
+        color: #7CADA5;
         font-size: 0.78rem;
         margin-top: 1.6rem;
         letter-spacing: 0.3px;
@@ -244,12 +234,13 @@ ordered_languages = [f"🇮🇳 {name}" for name in indian_display_names] + othe
 def resolve_lang(display_name):
     return lang_names[display_name.replace("🇮🇳 ", "")]
 
-# Language codes whose native script can be transliterated into Devanagari
-# so Hindi readers can sound out the translation
+def clean_name(display_name):
+    return display_name.replace("🇮🇳 ", "")
+
 SCRIPT_MAP = {
     'pa': sanscript.GURMUKHI,
     'bn': sanscript.BENGALI,
-    'as': sanscript.BENGALI,      # Assamese shares the Bengali-Assamese script
+    'as': sanscript.BENGALI,
     'gu': sanscript.GUJARATI,
     'kn': sanscript.KANNADA,
     'ml': sanscript.MALAYALAM,
@@ -259,8 +250,6 @@ SCRIPT_MAP = {
 }
 
 def get_reading_aid(text, target_code):
-    """Return a Devanagari (Hindi-script) reading aid if the target script
-    is a different Indic script we can transliterate. Returns None otherwise."""
     scheme = SCRIPT_MAP.get(target_code)
     if not scheme:
         return None
@@ -282,12 +271,13 @@ def swap_languages():
         )
 
 # ---------- HEADER ----------
-st.markdown('<div class="eyebrow">AI Translation Studio</div>', unsafe_allow_html=True)
 st.markdown('<div class="hero-title">🌐 Language Translator</div>', unsafe_allow_html=True)
-st.markdown('<div class="hero-rule"></div>', unsafe_allow_html=True)
 
-# ---------- TICKET CARD ----------
-st.markdown('<div class="ticket-card">', unsafe_allow_html=True)
+pair_label = f"{clean_name(st.session_state.source_choice)}  ⇄  {clean_name(st.session_state.target_choice)}"
+st.markdown(f'<div class="lang-pair-pill">{pair_label}</div>', unsafe_allow_html=True)
+
+# ---------- SOURCE BUBBLE ----------
+st.markdown('<div class="bubble-card">', unsafe_allow_html=True)
 
 col1, col_swap, col2 = st.columns([5, 1, 5])
 
@@ -309,9 +299,7 @@ with col2:
         key="target_choice"
     )
 
-st.markdown('<div class="ticket-perforation"></div>', unsafe_allow_html=True)
-
-input_text = st.text_area("Enter text to translate", height=140, placeholder="Type something...")
+input_text = st.text_area("Enter text to translate", height=130, placeholder="Type something...", label_visibility="collapsed")
 translate_clicked = st.button("Translate ✨", type="primary")
 
 st.markdown('</div>', unsafe_allow_html=True)
@@ -333,11 +321,18 @@ if translate_clicked:
         except Exception as e:
             st.error(f"Translation failed: {e}")
 
-# ---------- DISPLAY RESULT ----------
+# ---------- TARGET BUBBLE (result) ----------
 if "translated_text" in st.session_state:
-    st.markdown('<div class="ticket-card">', unsafe_allow_html=True)
-    st.markdown('<div class="result-label">Translated Text</div>', unsafe_allow_html=True)
-    st.markdown(f'<div class="result-box">{st.session_state["translated_text"]}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="bubble-card-target">', unsafe_allow_html=True)
+
+    col_t1, col_t2 = st.columns([6, 1])
+    with col_t1:
+        st.markdown(f'<div class="bubble-label-target">{clean_name(st.session_state.target_choice)}</div>', unsafe_allow_html=True)
+    with col_t2:
+        with st.container(key="listen_container"):
+            listen_clicked = st.button("🔊", key="listen_btn")
+
+    st.markdown(f'<div class="translated-text">{st.session_state["translated_text"]}</div>', unsafe_allow_html=True)
 
     reading_aid = get_reading_aid(st.session_state["translated_text"], st.session_state["target_code"])
     if reading_aid:
@@ -346,26 +341,19 @@ if "translated_text" in st.session_state:
             unsafe_allow_html=True
         )
 
-    st.write("")
-    col_a, col_b = st.columns(2)
-
-    with col_a:
-        st.code(st.session_state["translated_text"], language=None)
-        st.caption("👆 Click the copy icon in the top-right of the box above")
-
-    with col_b:
-        with st.container(key="listen_container"):
-            listen_clicked = st.button("🔊 Listen to translation")
-        if listen_clicked:
-            try:
-                tts = gTTS(text=st.session_state["translated_text"], lang=st.session_state["target_code"])
-                audio_buffer = io.BytesIO()
-                tts.write_to_fp(audio_buffer)
-                audio_buffer.seek(0)
-                st.audio(audio_buffer, format="audio/mp3")
-            except Exception as e:
-                st.error(f"Could not generate audio: {e}")
-
     st.markdown('</div>', unsafe_allow_html=True)
+
+    if listen_clicked:
+        try:
+            tts = gTTS(text=st.session_state["translated_text"], lang=st.session_state["target_code"])
+            audio_buffer = io.BytesIO()
+            tts.write_to_fp(audio_buffer)
+            audio_buffer.seek(0)
+            st.audio(audio_buffer, format="audio/mp3")
+        except Exception as e:
+            st.error(f"Could not generate audio: {e}")
+
+    with st.expander("📋 Copy translated text"):
+        st.code(st.session_state["translated_text"], language=None)
 
 st.markdown('<div class="footer-note">Built for CodeAlpha AI Internship — Task 1: Language Translation Tool</div>', unsafe_allow_html=True)
