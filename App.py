@@ -1,11 +1,3 @@
-"""
-CodeAlpha_LanguageTranslator
-A chat-bubble style Language Translation Tool built with Streamlit,
-inspired by mobile translation-app UI patterns.
-
-Run with:  streamlit run app.py
-"""
-
 import streamlit as st
 from deep_translator import GoogleTranslator
 from deep_translator.constants import GOOGLE_LANGUAGES_TO_CODES as RAW_LANGUAGES
@@ -85,12 +77,6 @@ st.markdown("""
         padding: 1.3rem 1.6rem;
         box-shadow: 0 8px 24px rgba(30, 90, 84, 0.18);
         margin-bottom: 1.1rem;
-    }
-    div[class*="st-key-target_card"] p,
-    div[class*="st-key-target_card"] div,
-    div[class*="st-key-target_card"] span,
-    div[class*="st-key-target_card"] label {
-        color: #FFFFFF !important;
     }
 
     .bubble-label {
